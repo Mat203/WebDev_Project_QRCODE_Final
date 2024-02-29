@@ -9,6 +9,8 @@ router.get('/qrcodes', qrCodeController.getAllQRCodes);
 router.delete('/delete-qr/:id', qrCodeController.deleteQR);
 router.get('/update-qr/:id', qrCodeController.getUpdatePage);
 router.post('/update-qr/:id', qrCodeController.updateQRCode);
+router.get('/download-qr/:id', qrCodeController.downloadQRCode);
+
 
 
 module.exports = router;

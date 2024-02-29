@@ -112,4 +112,21 @@ async function getUpdatePage(req, res) {
     }
 }
 
-module.exports = { findDataHandler, getAllQRCodes, generateQRCode, displayQRCode, getQRCodeImage, deleteQR, updateQRCode, getUpdatePage };
+async function downloadQRCode(req, res) {
+    try {
+        const qrCode = await QRCodeModel.findById(req.params.id);
+        const img = qrCode.image.split(",")[1];
+        const imgData = Buffer.from(img, 'base64');
+        res.writeHead(200, {
+           'Content-Type': 'image/png',
+           'Content-Disposition': 'attachment; filename=qr.png', 
+           'Content-Length': imgData.length 
+        });
+        res.end(imgData);
+    } catch (error) {
+        logger.error('Error downloading QR code:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+module.exports = { findDataHandler, getAllQRCodes, generateQRCode, displayQRCode, getQRCodeImage, deleteQR, updateQRCode, getUpdatePage, downloadQRCode };
