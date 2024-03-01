@@ -2,6 +2,7 @@ const QRCode = require('qrcode');
 const QRCodeModel = require('../models/qrcode');
 const { logger } = require('../helpers/logger');
 const { myCache } = require('../helpers/cache');
+const { handleError } = require('../helpers/errorHandler');
 
 async function findDataHandler(req, res) {
     const key = 'displayDataStructure';
@@ -10,7 +11,7 @@ async function findDataHandler(req, res) {
     if (value == undefined) {
         res.render('displayData', function(err, html) {
             if (err) {
-                res.status(500).send('An error occurred');
+                handleError(res, err, 500, 'Error rendering displayData');
             } else {
                 myCache.set(key, html);
                 res.send(html);
@@ -28,7 +29,7 @@ async function getAllQRCodes(req, res) {
         res.render('qr-archive', { qrcodes: qrcodes }); 
     } catch (error) {
         logger.error('Error fetching QR codes:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        handleError(res, error, 500, 'Error fetching QR codes');
     }
 }
 
@@ -42,7 +43,7 @@ async function generateQRCode(req, res) {
 
         if (!urlRegex.test(link)) {
             logger.error('Error generating QR code: Invalid URL provided');
-            return res.status(400).json({ error: 'Invalid URL' });
+            handleError(res, error, 400, 'Invalid URL');
         }
 
         const qrCodeImage = await QRCode.toDataURL(link);
@@ -52,7 +53,7 @@ async function generateQRCode(req, res) {
         res.redirect('/display-qr/' + qrCode._id);
     } catch (error) {
         logger.error('Error generating QR code:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        handleError(res, error, 500, 'Internal Server Error');
     }
 }
 
@@ -62,7 +63,7 @@ async function displayQRCode(req, res) {
         res.render('display-qr', { qrCode: qrCode });
     } catch (error) {
         logger.error('Error displaying QR code:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        handleError(res, error, 500, 'Internal Server Error');
     }
 }
 
@@ -74,7 +75,7 @@ async function getQRCodeImage(req, res) {
         res.send(qrCodeImage);
     } catch (error) {
         logger.error('Error generating QR code image:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        handleError(res, error, 500, 'Internal Server Error');
     }
 }
 
@@ -85,7 +86,7 @@ async function deleteQR(req, res) {
         res.redirect('/qrcodes');
     } catch (error) {
         logger.error('Error deleting QR code:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        handleError(res, error, 500, 'Internal Server Error');
     }
 }
 
@@ -98,7 +99,7 @@ async function updateQRCode(req, res) {
         res.redirect('/display-qr/' + id);
     } catch (error) {
         logger.error('Error updating QR code:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        handleError(res, error, 500, 'Internal Server Error');
     }
 }
 
@@ -108,7 +109,7 @@ async function getUpdatePage(req, res) {
         res.render('update-qr', { qrCode: qrCode });
     } catch (error) {
         logger.error('Error fetching QR code:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        handleError(res, error, 500, 'Internal Server Error');
     }
 }
 
@@ -125,7 +126,7 @@ async function downloadQRCode(req, res) {
         res.end(imgData);
     } catch (error) {
         logger.error('Error downloading QR code:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        handleError(res, error, 500, 'Internal Server Error');
     }
 }
 
