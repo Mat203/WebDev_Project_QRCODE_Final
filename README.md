@@ -26,11 +26,6 @@ Here are some of the endpoints that interact with these entities:
 ## Additional Functionalities
 
 ## Caching Strategies Documentation
-
-### Introduction to Caching
-
-Caching is a technique employed to store copies of frequently accessed or computationally expensive data, aiming to reduce latency and improve overall system performance. In your code, caching is implemented using the `node-cache` library.
-
 ### Cache Implementation
 
 The cache is initiated using the `node-cache` library, creating a new instance of `NodeCache`. The configuration includes settings for the standard Time-To-Live (TTL) and the check period for expired items.
