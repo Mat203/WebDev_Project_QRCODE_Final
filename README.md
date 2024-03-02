@@ -25,7 +25,7 @@ Here are some of the endpoints that interact with these entities:
 
 ## Additional Functionalities
 
-## Caching Strategies Documentation
+### Caching Strategies Documentation
 ### Cache Implementation
 
 The cache is initiated using the `node-cache` library, creating a new instance of `NodeCache`. The configuration includes settings for the standard Time-To-Live (TTL) and the check period for expired items.
